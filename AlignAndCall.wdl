@@ -94,9 +94,6 @@ workflow AlignAndCall {
     input:
       input_bam = AlignToMt.mt_aligned_bam,
       input_bam_index = AlignToMt.mt_aligned_bai,
-      ref_fasta = mt_fasta,
-      ref_fasta_index = mt_fasta_index,
-      preemptible_tries = preemptible_tries
   }
 
   call MutectAndFilter.MitochondriaCalling as CallAndFilterMt {
@@ -170,25 +167,19 @@ workflow AlignAndCall {
 task GetContamination {
   File input_bam
   File input_bam_index
-  File ref_fasta
-  File ref_fasta_index
   Int qual = 20
   Int map_qual = 30
-  Float vaf = 0.01
 
   String basename = basename(input_bam)
 
   # runtime
-  Int? preemptible_tries
-  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
-  Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
+  Int disk_size = ceil(size(input_bam, "GB")) + 20
 
   meta {
     description: "Uses Haplochecker to estimate levels of contamination in mitochondria"
   }
   parameter_meta {
     input_bam: "Bam aligned to chrM"
-    ref_fasta: "chrM reference"
   }
   command {
   set -e
@@ -199,27 +190,29 @@ task GetContamination {
     --baseQ ${qual} \
     --mapQ ${map_qual}
 
+    mv haplochecker_out/contamination/contamination.txt haplochecker_out/contamination/${basename}.contamination.txt
+
 python3 <<CODE
 
 import csv
 
-with open("haplochecker_out/${basename}.contamination.txt") as output:
+with open("haplochecker_out/contamination/${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
-        print(row["MajorHG"], file=open("major_hg.txt", 'w'))
-        print(row["MajorLevel"], file=open("major_level.txt", 'w'))
-        print(row["MinorHG"], file=open("minor_hg.txt", 'w'))
-        print(row["MinorLevel"], file=open("minor_level.txt", 'w'))
+        print(row["HgMajor"], file=open("major_hg.txt", 'w'))
+        print(row["MeanHetLevelMajor"], file=open("major_level.txt", 'w'))
+        print(row["HgMinor"], file=open("minor_hg.txt", 'w'))
+        print(row["MeanHetLevelMinor"], file=open("minor_level.txt", 'w'))
 CODE
   }
   runtime {
-    preemptible: select_first([preemptible_tries, 5])
+    preemptible: 0
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     docker: "gevrony/haplocheck:latest"
   }
   output {
-    File contamination_file = "haplochecker_out/${basename}.contamination.txt"
+    File contamination_file = "haplochecker_out/contamination/${basename}.contamination.txt"
     String major_hg = read_string("major_hg.txt")
     Float major_level = read_float("major_level.txt")
     String minor_hg = read_string("minor_hg.txt")
