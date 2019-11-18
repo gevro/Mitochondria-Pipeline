@@ -1,5 +1,5 @@
-import "https://api.firecloud.org/ga4gh/v1/tools/mt:AlignmentPipeline/versions/5/plain-WDL/descriptor" as AlignAndMarkDuplicates
-import "https://api.firecloud.org/ga4gh/v1/tools/mt:MitochondrialCalling/versions/12/plain-WDL/descriptor" as MutectAndFilter
+import "https://github.com/gevro/MitochondriaPipeline/raw/master/AlignAndMarkDuplicates.wdl" as AlignAndMarkDuplicates
+import "https://github.com/gevro/MitochondriaPipeline/raw/master/MutectAndFilter.wdl" as MutectAndFilter
 
 workflow AlignAndCall {
   meta {
