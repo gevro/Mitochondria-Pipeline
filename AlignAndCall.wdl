@@ -193,13 +193,11 @@ task GetContamination {
   command {
   set -e
 
-  java -jar /usr/mtdnaserver/mitolib-0.1.0.jar haplochecker \
-    --in ${input_bam} \
-    --ref ${ref_fasta} \
-    --out haplochecker_out \
-    --QUAL ${qual} \
-    --MAPQ ${map_qual} \
-    --VAF ${vaf}
+  ./cloudgene run haplocheck@1.0.5 \
+    --files ${input_bam} \
+    --output haplochecker_out \
+    --baseQ ${qual} \
+    --mapQ ${map_qual}
 
 python3 <<CODE
 
@@ -218,7 +216,7 @@ CODE
     preemptible: select_first([preemptible_tries, 5])
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
-    docker: "gatkworkflows/mtdnaserver:1.0"
+    docker: "gevrony/haplocheck:latest"
   }
   output {
     File contamination_file = "haplochecker_out/${basename}.contamination.txt"
