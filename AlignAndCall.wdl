@@ -1,5 +1,5 @@
-import "https://github.com/gevro/MitochondriaPipeline/raw/master/AlignAndMarkDuplicates.wdl" as AlignAndMarkDuplicates
-import "https://github.com/gevro/MitochondriaPipeline/raw/master/MutectAndFilter.wdl" as MutectAndFilter
+import "https://github.com/gevro/Mitochondria-Pipeline/raw/master/AlignAndMarkDuplicates.wdl" as AlignAndMarkDuplicates
+import "https://github.com/gevro/Mitochondria-Pipeline/raw/master/MutectAndFilter.wdl" as MutectAndFilter
 
 workflow AlignAndCall {
   meta {
@@ -192,7 +192,7 @@ task GetContamination {
 
     mv haplochecker_out/contamination/contamination.txt haplochecker_out/contamination/${basename}.contamination.txt
 
-python3 <<CODE
+python <<CODE
 
 import csv
 
