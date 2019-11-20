@@ -199,10 +199,16 @@ import csv
 with open("haplochecker_out/contamination/${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
-        print(row["HgMajor"], file=open("major_hg.txt", 'w'))
-        print(row["MeanHetLevelMajor"], file=open("major_level.txt", 'w'))
-        print(row["HgMinor"], file=open("minor_hg.txt", 'w'))
-        print(row["MeanHetLevelMinor"], file=open("minor_level.txt", 'w'))
+        if row["Contamination"] == "YES":
+          print >>open("major_hg.txt", 'w'),row["HgMajor"]
+          print >>open("major_level.txt", 'w'),row["MeanHetLevelMajor"]
+          print >>open("minor_hg.txt", 'w'),row["HgMinor"]
+          print >>open("minor_level.txt", 'w'),row["MeanHetLevelMinor"]
+        elif row["Contamination"] == "NO":
+          print >>open("major_hg.txt", 'w'),row["HgMajor"]
+          print >>open("major_level.txt", 'w'),"1.0"
+          print >>open("minor_hg.txt", 'w'),"NULL"
+          print >>open("minor_level.txt", 'w'),row["MeanHetLevelMinor"]
 CODE
   }
   runtime {
