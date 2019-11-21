@@ -189,7 +189,10 @@ task GetContamination {
     --output haplochecker_out \
     --baseQ ${qual} \
     --mapQ ${map_qual}
-
+    ls -lh
+    ls -lh haplochecker_out
+    ls -lh /haplochecker_out
+    ls -lh /haplochecker_out/contamination
     mv haplochecker_out/contamination/contamination.txt haplochecker_out/contamination/${basename}.contamination.txt
 
 python <<CODE
