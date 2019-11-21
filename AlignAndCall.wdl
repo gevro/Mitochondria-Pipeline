@@ -184,7 +184,7 @@ task GetContamination {
   command {
   set -e
 
-  ./cloudgene run haplocheck@1.0.5 \
+  /cloudgene run haplocheck@1.0.5 \
     --files ${input_bam} \
     --output haplochecker_out \
     --baseQ ${qual} \
