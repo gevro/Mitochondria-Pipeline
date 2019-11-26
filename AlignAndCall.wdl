@@ -190,7 +190,7 @@ task GetContamination {
     --baseQ ${qual} \
     --mapQ ${map_qual}
 
-    mv ./haplochecker_out/contamination/contamination.txt ./haplochecker_out/contamination/${basename}.contamination.txt
+    #mv ./haplochecker_out/contamination/contamination.txt ./haplochecker_out/contamination/${basename}.contamination.txt
     ls
     ls /
     ls ./haplochecker_out
