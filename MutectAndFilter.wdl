@@ -70,7 +70,7 @@ task M2AndFilter {
   File? gga_vcf_idx
   Float? autosomal_coverage
 
-  String output_vcf = "output" + if compress then ".vcf.gz" else ".vcf"
+  String output_vcf = basename("${input_bam}",".bam") + if compress then ".vcf.gz" else ".vcf"
   String output_vcf_index = output_vcf + if compress then ".tbi" else ".idx"
 
   String? m2_extra_filtering_args
