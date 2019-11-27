@@ -190,13 +190,13 @@ task GetContamination {
     --baseQ ${qual} \
     --mapQ ${map_qual}
 
-    mv /haplochecker_out/contamination/contamination.txt /haplochecker_out/contamination/${basename}.contamination.txt
+    mv /haplochecker_out/contamination/contamination.txt ${basename}.contamination.txt
 
 python <<CODE
 
 import csv
 
-with open("/haplochecker_out/contamination/${basename}.contamination.txt") as output:
+with open("${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
         if row["Contamination"] == "YES":
@@ -218,7 +218,7 @@ CODE
     docker: "gevrony/haplocheck:latest"
   }
   output {
-    File contamination_file = "/haplochecker_out/contamination/${basename}.contamination.txt"
+    File contamination_file = "${basename}.contamination.txt"
     String major_hg = read_string("major_hg.txt")
     Float major_level = read_float("major_level.txt")
     String minor_hg = read_string("minor_hg.txt")
