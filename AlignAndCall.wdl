@@ -197,16 +197,14 @@ import csv
 with open("${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
-        if row["Contamination Status"] == "YES":
-          print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
-          print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
-          print >>open("minor_hg.txt", 'w'),row["Minor Haplogroup"]
-          print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
-        elif row["Contamination Status"] == "NO":
-          print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
-          print >>open("major_level.txt", 'w'),"1.0"
-          print >>open("minor_hg.txt", 'w'),"NULL"
-          print >>open("minor_level.txt", 'w'),"0"
+      print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
+      print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
+      print >>open("minor_hg.txt", 'w'),row["Minor Haplogroup"]
+    if row["Minor Heteroplasmy Level"] == " " or row["Minor Heteroplasmy Level"] == "":
+      print >>open("minor_level.txt", 'w'),"0"
+    else:
+      print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
+
 CODE
   }
   runtime {
