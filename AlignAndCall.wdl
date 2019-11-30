@@ -184,7 +184,7 @@ task GetContamination {
   command {
   set -e
 
-  /cloudgene run haplocheck@1.0.5 \
+  /cloudgene run haplocheck@1.0.8 \
     --files ${input_bam} \
     --output haplochecker_out \
     --baseQ ${qual} \
@@ -199,16 +199,16 @@ import csv
 with open("${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
-        if row["Contamination"] == "YES":
-          print >>open("major_hg.txt", 'w'),row["HgMajor"]
-          print >>open("major_level.txt", 'w'),row["MeanHetLevelMajor"]
-          print >>open("minor_hg.txt", 'w'),row["HgMinor"]
-          print >>open("minor_level.txt", 'w'),row["MeanHetLevelMinor"]
-        elif row["Contamination"] == "NO":
-          print >>open("major_hg.txt", 'w'),row["HgMajor"]
+        if row["Contamination Status"] == "YES":
+          print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
+          print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
+          print >>open("minor_hg.txt", 'w'),row["Minor Haplogroup"]
+          print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
+        elif row["Contamination Status"] == "NO":
+          print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
           print >>open("major_level.txt", 'w'),"1.0"
           print >>open("minor_hg.txt", 'w'),"NULL"
-          print >>open("minor_level.txt", 'w'),row["MeanHetLevelMinor"]
+          print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
 CODE
   }
   runtime {
