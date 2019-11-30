@@ -235,6 +235,8 @@ task CollectWgsMetrics {
   Int read_length_for_optimization = select_first([read_length, 151])
   Int? coverage_cap
 
+  String output_basename = basename("${input_bam}",".bam")
+
   Int? preemptible_tries
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -254,15 +256,15 @@ task CollectWgsMetrics {
       INPUT=${input_bam} \
       VALIDATION_STRINGENCY=SILENT \
       REFERENCE_SEQUENCE=${ref_fasta} \
-      OUTPUT=basename("${input_bam}",".bam").metrics.txt \
+      OUTPUT="${output_basename}".metrics.txt \
       USE_FAST_ALGORITHM=true \
       READ_LENGTH=${read_length_for_optimization} \
       ${"COVERAGE_CAP=" + coverage_cap} \
       INCLUDE_BQ_HISTOGRAM=true \
-      THEORETICAL_SENSITIVITY_OUTPUT=basename("${input_bam}",".bam").theoretical_sensitivity.txt
+      THEORETICAL_SENSITIVITY_OUTPUT="${output_basename}".theoretical_sensitivity.txt
 
     R --vanilla <<CODE
-      df = read.table("metrics.txt",skip=6,header=TRUE,stringsAsFactors=FALSE,sep='\t',nrows=1)
+      df = read.table("${output_basename}".metrics.txt,skip=6,header=TRUE,stringsAsFactors=FALSE,sep='\t',nrows=1)
       write.table(floor(df[,"MEAN_COVERAGE"]), "mean_coverage.txt", quote=F, col.names=F, row.names=F)
     CODE
   >>>
@@ -273,8 +275,8 @@ task CollectWgsMetrics {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.1-1540490856"
   }
   output {
-    File metrics = basename("${input_bam}",".bam") + ".metrics.txt"
-    File theoretical_sensitivity = basename("${input_bam}",".bam") + ".theoretical_sensitivity.txt"
+    File metrics = "${output_basename}".metrics.txt
+    File theoretical_sensitivity = "${output_basename}".theoretical_sensitivity.txt
     Int mean_coverage = read_int("mean_coverage.txt")
   }
 }
