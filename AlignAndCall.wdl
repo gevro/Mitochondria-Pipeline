@@ -186,9 +186,7 @@ task GetContamination {
 
   /cloudgene run haplocheck@1.0.8 \
     --files ${input_bam} \
-    --output haplochecker_out \
-    --baseQ ${qual} \
-    --mapQ ${map_qual}
+    --output haplochecker_out
 
     mv /haplochecker_out/contamination/contamination.txt ${basename}.contamination.txt
 
@@ -264,7 +262,7 @@ task CollectWgsMetrics {
       THEORETICAL_SENSITIVITY_OUTPUT=${output_basename}.theoretical_sensitivity.txt
 
     R --vanilla <<CODE
-      df = read.table(${output_basename}.metrics.txt,skip=6,header=TRUE,stringsAsFactors=FALSE,sep='\t',nrows=1)
+      df = read.table("${output_basename}.metrics.txt",skip=6,header=TRUE,stringsAsFactors=FALSE,sep='\t',nrows=1)
       write.table(floor(df[,"MEAN_COVERAGE"]), "mean_coverage.txt", quote=F, col.names=F, row.names=F)
     CODE
   >>>
