@@ -206,7 +206,7 @@ with open("${basename}.contamination.txt") as output:
           print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
           print >>open("major_level.txt", 'w'),"1.0"
           print >>open("minor_hg.txt", 'w'),"NULL"
-          print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
+          print >>open("minor_level.txt", 'w'),"0"
 CODE
   }
   runtime {
