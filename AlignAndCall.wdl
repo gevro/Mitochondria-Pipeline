@@ -184,8 +184,10 @@ task GetContamination {
   command {
   set -e
 
-  /cloudgene run haplocheck@1.0.8 \
+  /cloudgene run haplocheck@1.0.9 \
     --files ${input_bam} \
+    --baseQ ${qual} \
+    --mapQ ${map_qual} \
     --output haplochecker_out
 
     mv /haplochecker_out/contamination/contamination.txt ${basename}.contamination.txt
@@ -198,12 +200,15 @@ with open("${basename}.contamination.txt") as output:
     reader = csv.DictReader(output, delimiter='\t')
     for row in reader:
       print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
-      print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
       print >>open("minor_hg.txt", 'w'),row["Minor Haplogroup"]
-    if row["Minor Heteroplasmy Level"] == " " or row["Minor Heteroplasmy Level"] == "":
-      print >>open("minor_level.txt", 'w'),"0"
-    else:
-      print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
+      if row["Minor Heteroplasmy Level"] == "n/a":
+        print >>open("minor_level.txt", 'w'),"0"
+      else:
+        print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
+      if row["Major Heteroplasmy Level"] == "n/a":
+        print >>open("major_level.txt", 'w'),"1"
+      else:
+        print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
 
 CODE
   }
