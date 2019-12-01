@@ -201,15 +201,14 @@ with open("${basename}.contamination.txt") as output:
     for row in reader:
       print >>open("major_hg.txt", 'w'),row["Major Haplogroup"]
       print >>open("minor_hg.txt", 'w'),row["Minor Haplogroup"]
-      if row["Minor Heteroplasmy Level"] == "n/a":
-        print >>open("minor_level.txt", 'w'),"0"
-      else:
-        print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
       if row["Major Heteroplasmy Level"] == "n/a":
         print >>open("major_level.txt", 'w'),"1"
       else:
         print >>open("major_level.txt", 'w'),row["Major Heteroplasmy Level"]
-
+      if row["Minor Heteroplasmy Level"] == "n/a":
+        print >>open("minor_level.txt", 'w'),"0"
+      else:
+        print >>open("minor_level.txt", 'w'),row["Minor Heteroplasmy Level"]
 CODE
   }
   runtime {
