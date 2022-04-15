@@ -213,7 +213,7 @@ CODE
   }
   runtime {
     preemptible: 0
-    memory: "3 GB"
+    memory: "8 GB"
     disks: "local-disk " + disk_size + " HDD"
     docker: "gevrony/haplocheck:latest"
   }
